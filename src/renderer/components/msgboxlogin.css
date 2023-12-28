@@ -1,0 +1,14 @@
+.alert2 {
+  padding: 10px;
+  margin-bottom: 0;
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
+  padding-bottom: auto;
+  z-index: 110;
+  position: sticky;
+  justify-content: center;
+  opacity: 0.8;
+  border-radius: 50px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-align: center;
+}

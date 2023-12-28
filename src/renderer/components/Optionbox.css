@@ -1,0 +1,28 @@
+.boxmod {
+  background-color: rgba(243, 243, 243, 0.651);
+  border-radius: 20px;
+
+  height: 100px;
+  margin-bottom: 20px;
+}
+
+.simplydiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.simplydiv23 {
+  display: flex;
+  margin-left: 15px;
+  justify-content: left;
+  align-items: left;
+}
+
+.simplydiv233 {
+  display: flex;
+  margin-left: 15px;
+  margin-top: 20px;
+  justify-content: left;
+  align-items: left;
+}

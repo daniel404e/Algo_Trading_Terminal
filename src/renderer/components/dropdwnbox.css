@@ -1,0 +1,10 @@
+.drpdown1 {
+  border-radius: 20px;
+  padding-top: 10px;
+  width: 30%;
+  min-width: 200px;
+  max-width: 270px;
+  display: inline;
+  position: relative;
+  margin-left: 20px;
+}

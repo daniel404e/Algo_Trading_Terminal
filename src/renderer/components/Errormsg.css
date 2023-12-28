@@ -1,0 +1,49 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:300);
+
+@keyframes example {
+  0% {
+    opacity: 1;
+  }
+  25% {
+    opacity: 0.75;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  75% {
+    opacity: 0.25;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.boxmod2 {
+  /* background-color:antiquewhite; */
+  background-color: rgba(243, 243, 243, 0.651);
+  border-radius: 20px;
+
+  height: 100px;
+  margin-bottom: 20px;
+}
+
+h1 {
+  font-family: 'Roboto', sans-serif;
+}
+
+.simplydiv2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.m-fadeOut {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s linear 300ms, opacity 600ms;
+}
+.m-fadeIn {
+  visibility: visible;
+  opacity: 1;
+  transition: visibility 0s linear 0s, opacity 600ms;
+}
