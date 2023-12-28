@@ -208,6 +208,22 @@ async function getcookiestring ()  {
     });
 
     try {
+      await page.setExtraHTTPHeaders({
+         
+          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+          'Accept-Encoding': 'gzip, deflate, br',
+          'Accept-Language': 'en-IN,en;q=0.9',
+          'Cache-Control': 'max-age=0',
+          'Connection': 'keep-alive', 
+         
+          'Sec-Fetch-Dest': 'document',
+          'Sec-Fetch-Mode': 'navigate',
+          'Sec-Fetch-Site': 'none',
+          'Sec-Fetch-User': '?1',
+          'Upgrade-Insecure-Requests': '1',
+          'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1'
+      
+    });
       await page.goto('https://www.nseindia.com/get-quotes', { waitUntil: 'networkidle0' });
       console.log('Page loaded successfully');
   } catch (error) {
