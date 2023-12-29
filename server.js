@@ -498,6 +498,22 @@ async function getBrowserPage() {
         browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
         page = await browser.newPage();
         await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36');
+        await page.setExtraHTTPHeaders({
+           
+          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+          'Accept-Encoding': 'gzip, deflate, br',
+          'Accept-Language': 'en-IN,en;q=0.9',
+          'Cache-Control': 'max-age=0',
+          'Connection': 'keep-alive', 
+         
+          'Sec-Fetch-Dest': 'document',
+          'Sec-Fetch-Mode': 'navigate',
+          'Sec-Fetch-Site': 'none',
+          'Sec-Fetch-User': '?1',
+          'Upgrade-Insecure-Requests': '1',
+          'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1'
+      
+    });
          await page.goto(`https://www.nseindia.com/get-quotes/derivatives?symbol=NIFTY`, { waitUntil: 'domcontentloaded' });
          
     }
@@ -525,22 +541,7 @@ app.get("/:index", async function(request, response2, next) {
   try {
       const page = await getBrowserPage();
 
-      await page.setExtraHTTPHeaders({
-           
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
-        'Accept-Encoding': 'gzip, deflate, br',
-        'Accept-Language': 'en-IN,en;q=0.9',
-        'Cache-Control': 'max-age=0',
-        'Connection': 'keep-alive', 
-       
-        'Sec-Fetch-Dest': 'document',
-        'Sec-Fetch-Mode': 'navigate',
-        'Sec-Fetch-Site': 'none',
-        'Sec-Fetch-User': '?1',
-        'Upgrade-Insecure-Requests': '1',
-        'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1'
-    
-  });
+      
 
       const response = await page.goto(`https://www.nseindia.com/api/option-chain-indices?symbol=${indexs}`, { waitUntil: 'domcontentloaded' });
       const data = await response.json();
