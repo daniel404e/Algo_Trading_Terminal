@@ -85,7 +85,7 @@ const createWindow = async () => {
     nodeIntegration: true ,     
     
   
-      devTools: true,   
+      devTools: false,   
       preload: app.isPackaged  
         ? path.join(__dirname, 'preload.js')
         : path.join(__dirname, '../../.erb/dll/preload.js'),  
@@ -122,7 +122,7 @@ mainWindow.webContents.send('screens2', "okay");
   const menuBuilder = new MenuBuilder(mainWindow);
  
   var backspace = String("/");
-   shell.openPath( process.resourcesPath+"/server-win.exe");
+  //  shell.openPath( process.resourcesPath+"/server-win.exe");
   // Open urls in the user's browser
   mainWindow.webContents.setWindowOpenHandler((edata) => {
     shell.openExternal(edata.url); 

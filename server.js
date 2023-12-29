@@ -389,18 +389,119 @@ response.send( doc2[0].content );
 
 
 
+// let browser;
+// let inactivityTimeout;
+
+// async function getBrowserInstance() {
+//     if (browser) {
+//         console.log("Using existing browser instance");
+//         return browser;
+//     } else {
+//         console.log("Launching new browser instance");
+//         browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
+//         return browser;
+//     }
+// }
+
+// function resetInactivityTimeout() {
+//     clearTimeout(inactivityTimeout);
+//     inactivityTimeout = setTimeout(async () => {
+//         if (browser) {
+//             console.log("Closing browser due to inactivity");
+//             await browser.close();
+//             browser = null;
+//         }
+//     }, 60000); // Set inactivity timeout (e.g., 60 seconds)
+// }
+
+
+// app.get("/:index",async function(request,response2,next){
+
+//   var indexs = request.params.index; 
+//   console.log(indexs)
+
+//   // console.log(cookieStringhed)
+ 
+
+//   try {
+    
+     
+        
+//     const browser2 = await getBrowserInstance();
+//     const page = await browser2.newPage();
+  
+    
+  
+//     // Set a common Chrome user-agent
+//     const userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36';
+//     await page.setUserAgent(userAgent);
+  
+//     resetInactivityTimeout();
+  
+//     return new Promise(async (resolve, reject) => {
+      
+  
+//       try {
+      //   await page.setExtraHTTPHeaders({
+           
+      //       'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+      //       'Accept-Encoding': 'gzip, deflate, br',
+      //       'Accept-Language': 'en-IN,en;q=0.9',
+      //       'Cache-Control': 'max-age=0',
+      //       'Connection': 'keep-alive', 
+           
+      //       'Sec-Fetch-Dest': 'document',
+      //       'Sec-Fetch-Mode': 'navigate',
+      //       'Sec-Fetch-Site': 'none',
+      //       'Sec-Fetch-User': '?1',
+      //       'Upgrade-Insecure-Requests': '1',
+      //       'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1'
+        
+      // });
+        
+//         const response = await page.goto(`https://www.nseindia.com/api/option-chain-indices?symbol=${indexs}`, { waitUntil: 'domcontentloaded' });
+// const data = await response.json();
+//         console.log('Page loaded successfully');
+//         console.log(data)
+//         response2.send(data);
+        
+           
+
+//     } catch (error) {
+//         console.error('Error loading page:', error.message);
+        
+//         reject(null); // Reject the Promise in case of error
+//     }
+//   });
+        
+    
+// } catch (error) {
+//   console.log("this is error 2 ")
+//     console.error('Error:', error);
+//     response2.send(error);
+//     // Handle the error
+// }
+  
+ 
+
+   
+// })
+
+
 let browser;
+let page;
 let inactivityTimeout;
 
-async function getBrowserInstance() {
-    if (browser) {
-        console.log("Using existing browser instance");
-        return browser;
-    } else {
+async function getBrowserPage() {
+    if (!browser) {
         console.log("Launching new browser instance");
         browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
-        return browser;
+        page = await browser.newPage();
+        await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36');
     }
+
+    resetInactivityTimeout(); // Reset the inactivity timeout
+    return page;
 }
 
 function resetInactivityTimeout() {
@@ -410,82 +511,45 @@ function resetInactivityTimeout() {
             console.log("Closing browser due to inactivity");
             await browser.close();
             browser = null;
+            page = null;
         }
-    }, 60000); // Set inactivity timeout (e.g., 60 seconds)
+    }, 600000); // 10 mins Adjust timeout as needed
 }
 
-
-app.get("/:index",async function(request,response2,next){
-
-  var indexs = request.params.index; 
-  console.log(indexs)
-
-  // console.log(cookieStringhed)
- 
+app.get("/:index", async function(request, response2, next) {
+  const indexs = request.params.index;
+  console.log(indexs);
 
   try {
-    
-     
-        
-    const browser2 = await getBrowserInstance();
-    const page = await browser2.newPage();
-  
-    
-  
-    // Set a common Chrome user-agent
-    const userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36';
-    await page.setUserAgent(userAgent);
-  
-    resetInactivityTimeout();
-  
-    return new Promise(async (resolve, reject) => {
-      
-  
-      try {
-        await page.setExtraHTTPHeaders({
-           
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
-            'Accept-Encoding': 'gzip, deflate, br',
-            'Accept-Language': 'en-IN,en;q=0.9',
-            'Cache-Control': 'max-age=0',
-            'Connection': 'keep-alive', 
-           
-            'Sec-Fetch-Dest': 'document',
-            'Sec-Fetch-Mode': 'navigate',
-            'Sec-Fetch-Site': 'none',
-            'Sec-Fetch-User': '?1',
-            'Upgrade-Insecure-Requests': '1',
-            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1'
-        
-      });
-        
-        const response = await page.goto(`https://www.nseindia.com/api/option-chain-indices?symbol=${indexs}`, { waitUntil: 'domcontentloaded' });
-const data = await response.json();
-        console.log('Page loaded successfully');
-        console.log(data)
-        response2.send(data);
-        
-           
+      const page = await getBrowserPage();
 
-    } catch (error) {
-        console.error('Error loading page:', error.message);
-        
-        reject(null); // Reject the Promise in case of error
-    }
+      await page.setExtraHTTPHeaders({
+           
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Accept-Language': 'en-IN,en;q=0.9',
+        'Cache-Control': 'max-age=0',
+        'Connection': 'keep-alive', 
+       
+        'Sec-Fetch-Dest': 'document',
+        'Sec-Fetch-Mode': 'navigate',
+        'Sec-Fetch-Site': 'none',
+        'Sec-Fetch-User': '?1',
+        'Upgrade-Insecure-Requests': '1',
+        'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1'
+    
   });
-        
-    
-} catch (error) {
-  console.log("this is error 2 ")
-    console.error('Error:', error);
-    response2.send(error);
-    // Handle the error
-}
-  
- 
 
-   
-})
+      const response = await page.goto(`https://www.nseindia.com/api/option-chain-indices?symbol=${indexs}`, { waitUntil: 'domcontentloaded' });
+      const data = await response.json();
+      console.log('Page loaded successfully');
+      response2.send(data);
+
+  } catch (error) {
+      console.error('Error:', error);
+      response2.send(error);
+  }
+});
 
  
 
