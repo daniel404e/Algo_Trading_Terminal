@@ -43,9 +43,9 @@ const Hello = () => {
 
 
 
-// const server = "http://165.232.184.135:4100"
+const server = "http://165.232.184.135:4100"
 
-const server = "http://localhost:4100"
+// const server = "http://localhost:4100"
 
  
 
@@ -177,62 +177,59 @@ setpopupstatus(response.data);
     }
     )
     //////////////////////////////////////////////////////////////////
-    const interval = setInterval(() => {
+    let timeoutId;
+    if(loggedin == 1 )
+    {
 
-    
-   
-      axios.get(server+"/"+indexf).then((response) => {
-        
-      console.log("this is america",response.data)
-         if(response.data.records)
-         {
-         current = convertjstarr(response.data , expnso);
-         tooptionboxexiry = response.data.records.expiryDates;
-         tosendtotable = current;
-         }
-        console.log("this is curent"+JSON.stringify(current));
-        //  console.log(JSON.stringify(prev));
-    
-          if(JSON.stringify(current) === JSON.stringify(prev))
-          { 
-            console.log("no change");
-             
-          
-            
-          }
-          else
-          {
-            console.log("changed");
-            setdatav(current);
-            
-
-          }
-
-
-          
-    
-        
-      }).catch(function (error) {
-        console.log("this is america",error)
-        console.log(error);
-      });
+      let prev = null;
       
-      
-           
-      
-        prev = current;
-        console.log(current[0]);
-        console.log(tmp23);
 
-
-      
-   
+    async function fetchData() {
+        try {
+            const response = await axios.get(server + "/" + indexf);
+            console.log("this is america", response.data);
     
-    }, 3000)
+            if (response.data.records) {
+                current = convertjstarr(response.data, expnso);
+                tooptionboxexiry = response.data.records.expiryDates;
+                tosendtotable = current;
+            }
+    
+            console.log("this is curent" + JSON.stringify(current));
+    
+            if (JSON.stringify(current) === JSON.stringify(prev)) {
+                console.log("no change");
+            } else {
+                console.log("changed");
+                setdatav(current);
+            }
+    
+            prev = current;
+            console.log(current[0]);
+            console.log(tmp23);
+        } catch (error) {
+            console.log("this is america", error);
+            console.log(error);
+        } finally {
+            // Schedule the next call after 3 seconds
+            timeoutId = setTimeout(fetchData, 3000);
+        }
+    }
+    
+    // Initial call to start the sequence
+    fetchData();
 
-
-    return () => clearTimeout(fetchData);
-  }, []);
+    }
+    
+    
+    // Return a cleanup function if this is inside a useEffect or similar
+    return () => {
+      if (timeoutId) {
+          clearTimeout(timeoutId);
+      }
+    }
+    
+  }, [loggedin]);
   
 
 
