@@ -544,7 +544,33 @@ app.get("/:index", async function(request, response2, next) {
       
 
       const response = await page.goto(`https://www.nseindia.com/api/option-chain-indices?symbol=${indexs}`, { waitUntil: 'domcontentloaded' });
-      const data = await response.json();
+
+      const responseBody = await response.text(); // Get the response text
+
+console.log(responseBody); // Log the response to see what it is
+
+let data
+// Only parse as JSON if the response is actually JSON
+if (response.headers()['content-type'].includes('application/json')) {
+      data = await response.json();
+
+
+     
+} else {
+  data = {}
+    // Handle non-JSON response
+
+    clearTimeout(inactivityTimeout);
+
+    // Close the browser and reset variables
+    if (browser) {
+        console.log("Closing browser due to non-JSON response");
+        await browser.close();
+        browser = null;
+        page = null;
+    }
+}
+       
       console.log('Page loaded successfully');
       response2.send(data);
 
