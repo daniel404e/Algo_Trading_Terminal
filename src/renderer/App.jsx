@@ -42,6 +42,11 @@ const Hello = () => {
 };
 
 
+
+const server = "http://165.232.184.135:4100"
+
+// const server = "http://localhost:4100"
+
  
 
 
@@ -84,7 +89,7 @@ export default function App() {
 {
 
  
-  var uri = "http://localhost:4100/auth/"+unameandpassword.user_name+"/password/"+ unameandpassword.password ;
+  var uri = server+"/auth/"+unameandpassword.user_name+"/password/"+ unameandpassword.password ;
 axios.get(uri).then((response) => {
 
 //console.log(response)
@@ -159,7 +164,7 @@ setpopupstatus(response.data);
    
   useEffect(() => {
     ////////////////////////////////////////////////////////////////
-    var uri2 = "http://localhost:4100/spotlight" ;
+    var uri2 = server+"/spotlight" ;
     axios.get(uri2).then((response) => {
     
     //console.log(response)
@@ -176,7 +181,7 @@ setpopupstatus(response.data);
 
     
    
-      axios.get("http://localhost:4100/"+indexf).then((response) => {
+      axios.get(server+"/"+indexf).then((response) => {
         
       console.log("this is america",response.data)
          if(response.data.records)
