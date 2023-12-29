@@ -317,7 +317,8 @@ async function fetchDataWithRetry(indexs, maxRetries = 3) {
           'Upgrade-Insecure-Requests': '1',
           'sec-ch-ua': '"Not_A Brand";v="8", "Chromium";v="120", "Microsoft Edge";v="120"',
           'sec-ch-ua-mobile': '?1',
-          'sec-ch-ua-platform': '"Android"'
+          'sec-ch-ua-platform': '"Android"' ,
+          'Host': 'www.nseindia.com'
          }
          ,
          timeout: 10000
