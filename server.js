@@ -4,7 +4,7 @@ const express = require("express");
 const axios = require("axios");
 var cors = require('cors')
 var mongoose = require('mongoose');
-  
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));  
 const puppeteer = require('puppeteer-extra');
 const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 
@@ -297,34 +297,73 @@ async function fetchDataWithRetry(indexs, maxRetries = 3) {
 
   while (attempts < maxRetries) {
     try {
+
+
+      const headers = {
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Accept-Language': 'en-IN,en;q=0.9',
+        'Cache-Control': 'max-age=0',
+        'Connection': 'keep-alive',
+        'Cookie': String(cookieStringhed),
+        'Referer': 'https://www.nseindia.com/',
+        'Upgrade-Insecure-Requests': '1',
+        'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1',
+        'Sec-Fetch-Dest': 'document',
+        'Sec-Fetch-Mode': 'navigate',
+        'Sec-Fetch-Site': 'none',
+        'Sec-Fetch-User': '?1',
+        'Upgrade-Insecure-Requests': '1',
+        'sec-ch-ua': '"Not_A Brand";v="8", "Chromium";v="120", "Microsoft Edge";v="120"',
+        'sec-ch-ua-mobile': '?1',
+        'sec-ch-ua-platform': '"Android"' ,
+        'Host': 'www.nseindia.com'
+       }
       
 
-      const response = await axios.get(`https://www.nseindia.com/api/option-chain-indices?symbol=${indexs}`, {
-        headers: {
-          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
-          'Accept-Encoding': 'gzip, deflate, br',
-          'Accept-Language': 'en-IN,en;q=0.9',
-          'Cache-Control': 'max-age=0',
-          'Connection': 'keep-alive',
-          'Cookie': String(cookieStringhed),
-          'Referer': 'https://www.nseindia.com/',
-          'Upgrade-Insecure-Requests': '1',
-          'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1',
-          'Sec-Fetch-Dest': 'document',
-          'Sec-Fetch-Mode': 'navigate',
-          'Sec-Fetch-Site': 'none',
-          'Sec-Fetch-User': '?1',
-          'Upgrade-Insecure-Requests': '1',
-          'sec-ch-ua': '"Not_A Brand";v="8", "Chromium";v="120", "Microsoft Edge";v="120"',
-          'sec-ch-ua-mobile': '?1',
-          'sec-ch-ua-platform': '"Android"' ,
-          'Host': 'www.nseindia.com'
-         }
-         ,
-         timeout: 10000
-      });
+      // const response = await axios.get(`https://www.nseindia.com/api/option-chain-indices?symbol=${indexs}`, {
+      //   headers: {
+      //     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+      //     'Accept-Encoding': 'gzip, deflate, br',
+      //     'Accept-Language': 'en-IN,en;q=0.9',
+      //     'Cache-Control': 'max-age=0',
+      //     'Connection': 'keep-alive',
+      //     'Cookie': String(cookieStringhed),
+      //     'Referer': 'https://www.nseindia.com/',
+      //     'Upgrade-Insecure-Requests': '1',
+      //     'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1',
+      //     'Sec-Fetch-Dest': 'document',
+      //     'Sec-Fetch-Mode': 'navigate',
+      //     'Sec-Fetch-Site': 'none',
+      //     'Sec-Fetch-User': '?1',
+      //     'Upgrade-Insecure-Requests': '1',
+      //     'sec-ch-ua': '"Not_A Brand";v="8", "Chromium";v="120", "Microsoft Edge";v="120"',
+      //     'sec-ch-ua-mobile': '?1',
+      //     'sec-ch-ua-platform': '"Android"' ,
+      //     'Host': 'www.nseindia.com'
+      //    }
+      //    ,
+      //    timeout: 10000
+      // });
 
-      return response; // Successful response
+
+      const response = await fetch(`https://www.nseindia.com/api/option-chain-indices?symbol=${indexs}`, {
+        method: 'GET',
+        headers: headers
+        
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+  }
+  const temp = await response.json();
+
+
+  const returnvalforfetch = {data:temp }
+
+  console.log(returnvalforfetch)
+
+      return returnvalforfetch; // Successful response
     } catch (err) {
       attempts++;
       console.log(`Attempt ${attempts}: Failed to fetch data. Retrying...`);
