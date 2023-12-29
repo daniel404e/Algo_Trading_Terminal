@@ -307,14 +307,13 @@ async function fetchDataWithRetry(indexs, maxRetries = 3) {
           'Cache-Control': 'max-age=0',
           'Connection': 'keep-alive',
           'Cookie': String(cookieStringhed),
-          'Sec-Fetch-Dest': 'document',
-          'Sec-Fetch-Mode': 'navigate',
-          'Sec-Fetch-Site': 'none',
-          'Sec-Fetch-User': '?1',
+          'Referer': 'https://www.nseindia.com/',
           'Upgrade-Insecure-Requests': '1',
           'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1'
 
          }
+         ,
+         timeout: 10000
       });
 
       return response; // Successful response
