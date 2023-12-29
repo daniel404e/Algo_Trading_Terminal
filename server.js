@@ -381,7 +381,52 @@ async function fetchDataWithRetry(indexs, maxRetries = 3) {
  
 
 
-app.get("/:index",async function(request,response,next){
+// app.get("/:index",async function(request,response,next){
+
+//   var indexs = request.params.index; 
+//   console.log(indexs)
+
+//   // console.log(cookieStringhed)
+ 
+
+//   try {
+    
+     
+        
+//     fetchDataWithRetry(indexs).then(resp => {
+      
+      
+        
+      
+//         tosend = resp.data;
+      
+//         response.send(tosend);
+         
+        
+//       }).catch((err)=>{
+      
+
+//         console.log("this is error 1 ")
+//          console.log(err)
+
+//         response.send(err);
+//        })
+        
+    
+// } catch (error) {
+//   console.log("this is error 2 ")
+//     console.error('Error:', error);
+//     response.send(error);
+//     // Handle the error
+// }
+  
+ 
+
+   
+// })
+
+
+app.get("/:index",async function(request,response2,next){
 
   var indexs = request.params.index; 
   console.log(indexs)
@@ -393,30 +438,58 @@ app.get("/:index",async function(request,response,next){
     
      
         
-    fetchDataWithRetry(indexs).then(resp => {
+    const browser = await puppeteer.launch({ headless: true ,args: ['--no-sandbox', '--disable-setuid-sandbox'] }); // Launch in non-headless mode to see the browser
+    const page = await browser.newPage();
+  
+    await page.waitForTimeout(1000);
+  
+    // Set a common Chrome user-agent
+    const userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36';
+    await page.setUserAgent(userAgent);
+  
+   
+  
+    return new Promise(async (resolve, reject) => {
       
-      
+  
+      try {
+        await page.setExtraHTTPHeaders({
+           
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'Accept-Language': 'en-IN,en;q=0.9',
+            'Cache-Control': 'max-age=0',
+            'Connection': 'keep-alive', 
+           
+            'Sec-Fetch-Dest': 'document',
+            'Sec-Fetch-Mode': 'navigate',
+            'Sec-Fetch-Site': 'none',
+            'Sec-Fetch-User': '?1',
+            'Upgrade-Insecure-Requests': '1',
+            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1'
         
-      
-        tosend = resp.data;
-      
-        response.send(tosend);
-         
+      });
         
-      }).catch((err)=>{
-      
+        const response = await page.goto(`https://www.nseindia.com/api/option-chain-indices?symbol=${indexs}`, { waitUntil: 'domcontentloaded' });
+const data = await response.json();
+        console.log('Page loaded successfully');
+        console.log(data)
+        response2.send(data);
+        await browser.close();
+           
 
-        console.log("this is error 1 ")
-         console.log(err)
-
-        response.send(err);
-       })
+    } catch (error) {
+        console.error('Error loading page:', error.message);
+        await browser.close();
+        reject(null); // Reject the Promise in case of error
+    }
+  });
         
     
 } catch (error) {
   console.log("this is error 2 ")
     console.error('Error:', error);
-    response.send(error);
+    response2.send(error);
     // Handle the error
 }
   
@@ -424,7 +497,6 @@ app.get("/:index",async function(request,response,next){
 
    
 })
-
 
  
 
